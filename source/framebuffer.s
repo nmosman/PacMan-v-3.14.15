@@ -92,7 +92,6 @@ FrameBufferInit:
 	.int	0			// Pointer to FrameBuffer (Set by GPU)
 	.int	0			// Size of FrameBuffer (Set by GPU)
 
-
 .globl FrameBufferPointer
 FrameBufferPointer:
 	.int	0
