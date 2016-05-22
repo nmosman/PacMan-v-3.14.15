@@ -1,0 +1,247 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD build/player.o
+LOAD build/jtag.o
+LOAD build/framebuffer.o
+LOAD build/text.o
+LOAD build/game.o
+LOAD build/snes.o
+LOAD build/main.o
+LOAD build/ghosts.o
+LOAD build/graphics.o
+LOAD build/map.o
+LOAD build/image.o
+
+.init           0x00008000        0x4
+ *(.init)
+ .init          0x00008000        0x4 build/main.o
+                0x00008000                _start
+ .init          0x00008004        0x0 build/graphics.o
+ .init          0x00008004        0x0 build/map.o
+
+.data           0x00009080     0x2116
+ *(.data)
+ .data          0x00009080       0x24 build/player.o
+                0x00009080                pacStartPos
+                0x00009084                pacCurPos
+                0x00009088                curCheckPoint
+                0x0000908c                checkPointCoords
+                0x00009094                pacCoords
+                0x0000909c                pacStartCoords
+ .data          0x000090a4        0x0 build/jtag.o
+ *fill*         0x000090a4        0xc 3f3f3f3f
+ .data          0x000090b0       0x60 build/framebuffer.o
+                0x000090d8                FrameBufferPointer
+                0x000090e0                FrameBufferInfo
+ .data          0x00009110      0x890 build/text.o
+                0x00009110                font
+                0x00009910                livesTitle
+                0x00009918                authorsTitle
+                0x00009953                scoreTitle
+                0x0000995a                gameOverText
+                0x00009964                gameWonText
+                0x00009972                gameTitle
+                0x00009980                winMsg
+                0x00009989                loseMsg
+ .data          0x000099a0       0x2c build/game.o
+                0x000099a0                score
+                0x000099a4                savedScore
+                0x000099a8                lives
+                0x000099ac                pellets
+                0x000099b0                savedPellets
+                0x000099b4                winFlag
+                0x000099b8                loseFlag
+                0x000099bc                ghostSpeedCounter
+                0x000099c0                asciiLives
+                0x000099c4                scoreDigits
+                0x000099c8                lastObservedTime
+ .data          0x000099cc        0x0 build/snes.o
+ .data          0x000099cc        0x0 build/main.o
+ .data          0x000099cc       0x60 build/ghosts.o
+                0x000099cc                ghostStartPos
+                0x000099dc                ghostCoordinates
+                0x000099fc                ghostStartCoordinates
+                0x00009a1c                ghostCurPos
+ .data          0x00009a2c        0x0 build/graphics.o
+ .data          0x00009a2c      0x56a build/map.o
+                0x00009a2c                currentMap
+                0x00009bfa                resetMap
+                0x00009dc8                checkPointMap
+ .data          0x00009f96     0x1200 build/image.o
+                0x00009f96                pac_man
+                0x0000a196                blinky
+                0x0000a396                pinky
+                0x0000a596                inky
+                0x0000a796                clyde
+                0x0000a996                checkpointTile
+                0x0000ab96                pelletTile
+                0x0000ad96                wallTile
+                0x0000af96                floorTile
+ *.c.o(*)
+
+.igot.plt       0x0000b198        0x0
+ .igot.plt      0x00000000        0x0 build/player.o
+
+.text           0x0000b198      0xee0
+ *.c.o(.text)
+ *(.text)
+ .text          0x0000b198      0x1d0 build/player.o
+                0x0000b198                movePacMan
+                0x0000b2fc                validMove
+ .text          0x0000b368       0x8c build/jtag.o
+                0x0000b368                EnableJTAG
+ .text          0x0000b3f4       0x70 build/framebuffer.o
+                0x0000b3f4                InitFrameBuffer
+ .text          0x0000b464       0xa8 build/text.o
+                0x0000b464                drawChar
+                0x0000b4c0                drawText
+ .text          0x0000b50c      0x444 build/game.o
+                0x0000b50c                divideByNumber
+                0x0000b530                loseGame
+                0x0000b550                winGame
+                0x0000b5f0                initializeGame
+                0x0000b60c                resetData
+                0x0000b764                collisionCheck
+                0x0000b84c                checkGameState
+                0x0000b870                processGhostsMove
+                0x0000b89c                delayGame
+                0x0000b8bc                saveCurrentTime
+ .text          0x0000b950      0x154 build/snes.o
+                0x0000b950                initSNES
+                0x0000b9f0                wait
+                0x0000ba0c                getSNESInput
+ .text          0x0000baa4       0x34 build/main.o
+                0x0000baa4                main
+                0x0000bab4                gameLoop
+ .text          0x0000bad8      0x1bc build/ghosts.o
+                0x0000bad8                moveGhosts
+ .text          0x0000bc94      0x3e4 build/graphics.o
+                0x0000bc94                drawPixel
+                0x0000bd50                drawGameBoard
+                0x0000be0c                updateScreen
+                0x0000be5c                drawTile
+                0x0000bebc                updatePacman
+                0x0000bedc                updateGhosts
+                0x0000bf38                initCharacters
+                0x0000bfa8                updateScoreOnScreen
+ .text          0x0000c078        0x0 build/map.o
+ .text          0x0000c078        0x0 build/image.o
+OUTPUT(build/output.elf elf32-littlearm)
+
+.glue_7         0x0000c078        0x0
+ .glue_7        0x00000000        0x0 linker stubs
+
+.glue_7t        0x0000c078        0x0
+ .glue_7t       0x00000000        0x0 linker stubs
+
+.vfp11_veneer   0x0000c078        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x0000c078        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x0000c078        0x0
+ .iplt          0x00000000        0x0 build/player.o
+
+.rel.dyn        0x0000c078        0x0
+ .rel.iplt      0x00000000        0x0 build/player.o
+
+.bss            0x0000c078        0x0
+ .bss           0x0000c078        0x0 build/player.o
+ .bss           0x0000c078        0x0 build/jtag.o
+ .bss           0x0000c078        0x0 build/framebuffer.o
+ .bss           0x0000c078        0x0 build/text.o
+ .bss           0x0000c078        0x0 build/game.o
+ .bss           0x0000c078        0x0 build/snes.o
+ .bss           0x0000c078        0x0 build/main.o
+ .bss           0x0000c078        0x0 build/ghosts.o
+ .bss           0x0000c078        0x0 build/graphics.o
+ .bss           0x0000c078        0x0 build/map.o
+ .bss           0x0000c078        0x0 build/image.o
+
+.ARM.attributes
+                0x00000000       0x26
+ .ARM.attributes
+                0x00000000       0x26 build/player.o
+ .ARM.attributes
+                0x00000026       0x26 build/jtag.o
+ .ARM.attributes
+                0x0000004c       0x26 build/framebuffer.o
+ .ARM.attributes
+                0x00000072       0x26 build/text.o
+ .ARM.attributes
+                0x00000098       0x26 build/game.o
+ .ARM.attributes
+                0x000000be       0x26 build/snes.o
+ .ARM.attributes
+                0x000000e4       0x26 build/main.o
+ .ARM.attributes
+                0x0000010a       0x26 build/ghosts.o
+ .ARM.attributes
+                0x00000130       0x26 build/graphics.o
+ .ARM.attributes
+                0x00000156       0x26 build/map.o
+ .ARM.attributes
+                0x0000017c       0x26 build/image.o
+
+.debug_line     0x00000000      0x6a5
+ .debug_line    0x00000000       0xc2 build/player.o
+ .debug_line    0x000000c2       0x61 build/jtag.o
+ .debug_line    0x00000123       0x64 build/framebuffer.o
+ .debug_line    0x00000187       0x71 build/text.o
+ .debug_line    0x000001f8      0x180 build/game.o
+ .debug_line    0x00000378       0xa2 build/snes.o
+ .debug_line    0x0000041a       0x58 build/main.o
+ .debug_line    0x00000472       0xbf build/ghosts.o
+ .debug_line    0x00000531      0x174 build/graphics.o
+
+.debug_info     0x00000000      0x311
+ .debug_info    0x00000000       0x58 build/player.o
+ .debug_info    0x00000058       0x56 build/jtag.o
+ .debug_info    0x000000ae       0x5d build/framebuffer.o
+ .debug_info    0x0000010b       0x56 build/text.o
+ .debug_info    0x00000161       0x56 build/game.o
+ .debug_info    0x000001b7       0x56 build/snes.o
+ .debug_info    0x0000020d       0x52 build/main.o
+ .debug_info    0x0000025f       0x58 build/ghosts.o
+ .debug_info    0x000002b7       0x5a build/graphics.o
+
+.debug_abbrev   0x00000000       0xb2
+ .debug_abbrev  0x00000000       0x14 build/player.o
+ .debug_abbrev  0x00000014       0x14 build/jtag.o
+ .debug_abbrev  0x00000028       0x14 build/framebuffer.o
+ .debug_abbrev  0x0000003c       0x14 build/text.o
+ .debug_abbrev  0x00000050       0x14 build/game.o
+ .debug_abbrev  0x00000064       0x14 build/snes.o
+ .debug_abbrev  0x00000078       0x12 build/main.o
+ .debug_abbrev  0x0000008a       0x14 build/ghosts.o
+ .debug_abbrev  0x0000009e       0x14 build/graphics.o
+
+.debug_aranges  0x00000000      0x128
+ .debug_aranges
+                0x00000000       0x20 build/player.o
+ .debug_aranges
+                0x00000020       0x20 build/jtag.o
+ .debug_aranges
+                0x00000040       0x20 build/framebuffer.o
+ .debug_aranges
+                0x00000060       0x20 build/text.o
+ .debug_aranges
+                0x00000080       0x20 build/game.o
+ .debug_aranges
+                0x000000a0       0x20 build/snes.o
+ .debug_aranges
+                0x000000c0       0x28 build/main.o
+ .debug_aranges
+                0x000000e8       0x20 build/ghosts.o
+ .debug_aranges
+                0x00000108       0x20 build/graphics.o
+
+.debug_ranges   0x00000000       0x20
+ .debug_ranges  0x00000000       0x20 build/main.o
